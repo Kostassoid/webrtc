@@ -121,8 +121,6 @@ func (o *OggReader) readHeaders() (*OggHeader, error) {
 	header.OutputGain = binary.LittleEndian.Uint16(payload[16:18])
 	header.ChannelMap = payload[18]
 
-	o.bytesReadSuccesfully += int64(len(payload))
-
 	return header, nil
 }
 
@@ -191,7 +189,7 @@ func (o *OggReader) ParseNextPage() ([]byte, *OggPageHeader, error) {
 		}
 	}
 
-	o.bytesReadSuccesfully += int64(len(payload))
+	o.bytesReadSuccesfully += int64(len(h) + len(payload))
 
 	return payload, pageHeader, nil
 }
