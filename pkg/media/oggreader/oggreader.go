@@ -189,7 +189,7 @@ func (o *OggReader) ParseNextPage() ([]byte, *OggPageHeader, error) {
 		}
 	}
 
-	o.bytesReadSuccesfully += int64(len(h) + len(payload))
+	o.bytesReadSuccesfully += int64(len(h) + len(sizeBuffer) + len(payload))
 
 	return payload, pageHeader, nil
 }
