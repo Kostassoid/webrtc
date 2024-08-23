@@ -72,6 +72,10 @@ func NewWith(in io.Reader) (*OggReader, *OggHeader, error) {
 	return newWith(in /* doChecksum */, true)
 }
 
+func WithoutTheChecksum(in io.Reader) (*OggReader, *OggHeader, error) {
+	return newWith(in /* doChecksum */, false)
+}
+
 func newWith(in io.Reader, doChecksum bool) (*OggReader, *OggHeader, error) {
 	if in == nil {
 		return nil, nil, errNilStream
