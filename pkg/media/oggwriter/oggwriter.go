@@ -60,11 +60,24 @@ func New(fileName string, sampleRate uint32, channelCount uint16) (*OggWriter, e
 
 // NewWith initialize a new OGG Opus writer with an io.Writer output
 func NewWith(out io.Writer, sampleRate uint32, channelCount uint16) (*OggWriter, error) {
+	writer, err := NewWithoutHeaders(out, sampleRate, channelCount)
+	if err != nil {
+		return nil, err
+	}
+
+	if err = writer.writeHeaders(); err != nil {
+		return nil, err
+	}
+
+	return writer, nil
+}
+
+func NewWithoutHeaders(out io.Writer, sampleRate uint32, channelCount uint16) (*OggWriter, error) {
 	if out == nil {
 		return nil, errFileNotOpened
 	}
 
-	writer := &OggWriter{
+	return &OggWriter{
 		stream:        out,
 		sampleRate:    sampleRate,
 		channelCount:  channelCount,
@@ -75,12 +88,7 @@ func NewWith(out io.Writer, sampleRate uint32, channelCount uint16) (*OggWriter,
 		// Only headers can have 0 values
 		previousTimestamp:       1,
 		previousGranulePosition: 1,
-	}
-	if err := writer.writeHeaders(); err != nil {
-		return nil, err
-	}
-
-	return writer, nil
+	}, nil
 }
 
 /*
